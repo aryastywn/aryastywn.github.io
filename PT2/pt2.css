@@ -1,0 +1,94 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-family: sans-serif;
+}
+a{
+    color: inherit;
+    text-decoration: none;
+}
+.medsos{
+    padding: 5px 0;
+    background-color: #EF9595;
+    box-shadow: 0 7px 15px 0 rgba(0, 0, 0, 0.5);
+}
+
+.medsos ul li {
+    display: inline-block;
+    color: #fff;
+    
+}
+
+.medsos .container ul li:hover{
+    color: yellow;
+}
+
+/* header {
+
+} */
+header h1{
+    float: left;
+    padding: 15px 0;
+    color: #EF9595;
+}
+header ul{
+    float: right;
+}
+header ul li{
+    display: inline-block;
+}
+header ul li a{
+    padding: 25px 20px;
+    display: inline-block;
+}
+header ul li a:hover{
+    background-color: #EF9595;
+    color: #fff;
+}
+.active{
+    background-color: #EF9595;
+    color: #fff;
+}
+
+.background{
+    height: 60vh;
+    margin-top: 80px;
+    background-image: url(Fabio\ Quartararo.jpeg);
+    background-size: 50%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.background::after{
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+.background h2{
+    color: #fff;
+    padding: 20px 25px;
+}
+
+.border h2{
+    border-radius: 100px;
+    background: #EF9595;
+}
+.footer {
+    padding: 5px 0;
+    background-color: #EF9595;
+    color: black;
+    margin-top: 10px;
+    text-align: center;
+}
+section{
+    padding: 50px 0;
+}
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
