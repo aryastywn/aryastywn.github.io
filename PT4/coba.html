@@ -1,0 +1,624 @@
+#include <iostream>
+    #include <conio.h>
+    
+    using namespace std;
+    
+    struct Helm {
+        string nama;
+        string seri;
+        int harga;
+        int stok;
+        string ukuran;
+        Helm* next;
+    };
+    
+    Helm* head = NULL;
+    
+    Helm* merge(Helm* left, Helm* right, bool ascending) {
+        if (!left) return right;
+        if (!right) return left;
+    
+        Helm* result = NULL;
+    
+        if (ascending) {
+            if (left->harga <= right->harga) {
+                result = left;
+                result->next = merge(left->next, right, ascending);
+            } else {
+                result = right;
+                result->next = merge(left, right->next, ascending);
+            }
+        } else {
+            if (left->harga >= right->harga) {
+                result = left;
+                result->next = merge(left->next, right, ascending);
+            } else {
+                result = right;
+                result->next = merge(left, right->next, ascending);
+            }
+        }
+    
+        return result;
+    }
+    
+    Helm* mergeSort(Helm* head, bool ascending) {
+        if (!head || !head->next) {
+            return head;
+        }
+    
+        Helm* mid = head;
+        Helm* fast = head->next;
+    
+        while (fast) {
+            fast = fast->next;
+            if (fast) {
+                mid = mid->next;
+                fast = fast->next;
+            }
+        }
+    
+        Helm* left = head;
+        Helm* right = mid->next;
+        mid->next = NULL;
+    
+        left = mergeSort(left, ascending);
+        right = mergeSort(right, ascending);
+    
+        return merge(left, right, ascending);
+    }
+    
+    void mergeSortAscending() {
+        if (head == NULL) {
+            cout << "Daftar helm kosong. Tidak ada data untuk diurutkan." << endl;
+            return;
+        }
+    
+        head = mergeSort(head, true);
+        cout << "Data helm telah diurutkan secara ascending berdasarkan harga." << endl;
+    }
+    
+    void mergeSortDescending() {
+        if (head == NULL) {
+            cout << "Daftar helm kosong. Tidak ada data untuk diurutkan." << endl;
+            return;
+        }
+    
+        head = mergeSort(head, false);
+        cout << "Data helm telah diurutkan secara descending berdasarkan harga." << endl;
+    }
+    
+    void shellSortAscending(Helm* head) {
+        int n = 0;
+        Helm* current = head;
+    
+        while (current != NULL) {
+            n++;
+            current = current->next;
+        }
+    
+        int gap = n / 2;
+        while (gap > 0) {
+            for (int i = gap; i < n; i++) {
+                Helm* temp = head;
+                for (int j = i; j >= gap; j -= gap) {
+                    for (int k = 0; k < j; k++) {
+                        temp = temp->next;
+                    }
+    
+                    Helm* current = head;
+                    for (int k = 0; k < j - gap; k++) {
+                        current = current->next;
+                    }
+    
+                    if (current->nama > temp->nama) {
+                        swap(current->nama, temp->nama);
+                        swap(current->seri, temp->seri);
+                        swap(current->harga, temp->harga);
+                        swap(current->stok, temp->stok);
+                        swap(current->ukuran, temp->ukuran);
+                    }
+                }
+            }
+            gap /= 2;
+        }
+    }
+    
+    void shellSortDescending(Helm* head) {
+        int n = 0;
+        Helm* current = head;
+    
+        while (current != NULL) {
+            n++;
+            current = current->next;
+        }
+    
+        int gap = n / 2;
+        while (gap > 0) {
+            for (int i = gap; i < n; i++) {
+                Helm* temp = head;
+                for (int j = i; j >= gap; j -= gap) {
+                    for (int k = 0; k < j; k++) {
+                        temp = temp->next;
+                    }
+    
+                    Helm* current = head;
+                    for (int k = 0; k < j - gap; k++) {
+                        current = current->next;
+                    }
+    
+                    if (current->nama < temp->nama) {
+                        swap(current->nama, temp->nama);
+                        swap(current->seri, temp->seri);
+                        swap(current->harga, temp->harga);
+                        swap(current->stok, temp->stok);
+                        swap(current->ukuran, temp->ukuran);
+                    }
+                }
+            }
+            gap /= 2;
+        }
+    }
+    
+    void quickSortAscending(Helm* head, Helm* tail) {
+        if (!head || head == tail || head == NULL || tail == NULL) {
+            return;
+        }
+    
+        Helm* pivot = head;
+        Helm* current = head->next;
+    
+        while (current != tail->next) {
+            if (current->stok < pivot->stok) {
+                swap(pivot->nama, current->nama);
+                swap(pivot->seri, current->seri);
+                swap(pivot->harga, current->harga);
+                swap(pivot->stok, current->stok);
+                swap(pivot->ukuran, current->ukuran);
+                pivot = pivot->next;
+            }
+            current = current->next;
+        }
+    
+        quickSortAscending(head, pivot);
+        quickSortAscending(pivot->next, tail);
+    }
+    
+    void quickSortDescending(Helm* head, Helm* tail) {
+        if (!head || head == tail || head == NULL || tail == NULL) {
+            return;
+        }
+    
+        Helm* pivot = head;
+        Helm* current = head->next;
+    
+        while (current != tail->next) {
+            if (current->stok > pivot->stok) {
+                swap(pivot->nama, current->nama);
+                swap(pivot->seri, current->seri);
+                swap(pivot->harga, current->harga);
+                swap(pivot->stok, current->stok);
+                swap(pivot->ukuran, current->ukuran);
+                pivot = pivot->next;
+            }
+            current = current->next;
+        }
+    
+        quickSortDescending(head, pivot);
+        quickSortDescending(pivot->next, tail);
+    }
+    
+    void urutkanData() {
+        int pilihSorting;
+    
+        if (head == NULL) {
+            cout << "Daftar helm kosong. Tidak ada data untuk diurutkan." << endl;
+            return;
+        }
+    
+        Helm* tail = head;
+        while (tail->next) {
+            tail = tail->next;
+        }
+    
+        cout << "Pilih sorting: ";
+        cin >> pilihSorting;
+    
+        switch (pilihSorting) {
+            case 1:
+                mergeSortAscending();
+                break;
+            case 2:
+                mergeSortDescending();
+                break;
+            case 3:
+                shellSortAscending(head);
+                break;
+            case 4:
+                shellSortDescending(head);
+                break;
+            case 5:
+                quickSortAscending(head, tail); 
+                break;
+            case 6:
+                quickSortDescending(head, tail);
+                break;
+            default:
+                cout << "Pilihan pengurutan tidak valid." << endl;
+        }
+    }
+    
+    
+    void tampilkanHelm() {
+        Helm* current = head;
+    
+        if (current == NULL) {
+            cout << "Tidak ada helm dalam daftar." << endl;
+            return;
+        }
+    
+        cout << "Daftar Helm di Toko:" << endl;
+        int nomorHelm = 1;
+        while (current != NULL) {
+            cout << "===================================" << endl;
+            cout << "Helm #" << nomorHelm << ":" << endl;
+            cout << "Nama/Merk: " << current->nama << endl;
+            cout << "Seri: " << current->seri << endl;
+            cout << "Harga: Rp. " << current->harga << endl;
+            cout << "Stok: " << current->stok << " pcs" << endl;
+            cout << "Ukuran: " << current->ukuran << endl;
+            current = current->next;
+            nomorHelm++;
+        }
+    
+        cout << "Tekan ENTER untuk kembali ke menu awal... ";
+        getch();
+        system("cls");
+    }
+    
+    void tambahHelmDiAwal() {
+        Helm* helm = new Helm;
+        cout << "Masukkan Nama/Merk Helm: ";
+        cin.ignore();
+        getline(cin, helm->nama);
+    
+        cout << "Masukkan Seri Helm: ";
+        getline(cin, helm->seri);
+    
+        cout << "Masukkan Harga Helm: Rp. ";
+        cin >> helm->harga;
+    
+        cout << "Masukkan Stok Helm: ";
+        cin >> helm->stok;
+    
+        cout << "Masukkan Ukuran Helm: ";
+        cin.ignore();
+        getline(cin, helm->ukuran);
+    
+        helm->next = head;
+        head = helm;
+        cout << "\nHelm telah ditambahkan di awal!" << endl;
+        cout << "Tekan ENTER untuk kembali ke menu awal... ";
+        getch();
+        system("cls");
+    }
+    
+    void hapusHelmDiAwal() {
+        if (head == NULL) {
+            cout << "Tidak ada helm dalam daftar." << endl;
+            cout << "Tekan ENTER untuk kembali ke menu awal... ";
+            getch();
+            system("cls");
+            return;
+        }
+    
+        Helm* helmHapus = head;
+        head = head->next;
+        delete helmHapus;
+        cout << "Helm di awal telah dihapus!" << endl;
+        cout << "Tekan ENTER untuk kembali ke menu awal... ";
+        getch();
+        system("cls");
+    }
+    
+    void tambahHelmDiAkhir() {
+        Helm* helm = new Helm;
+        cout << "Masukkan Nama/Merk Helm: ";
+        cin.ignore();
+        getline(cin, helm->nama);
+    
+        cout << "Masukkan Seri Helm: ";
+        getline(cin, helm->seri);
+    
+        cout << "Masukkan Harga Helm: Rp. ";
+        cin >> helm->harga;
+    
+        cout << "Masukkan Stok Helm: ";
+        cin >> helm->stok;
+    
+        cout << "Masukkan Ukuran Helm: ";
+        cin.ignore();
+        getline(cin, helm->ukuran);
+    
+        helm->next = NULL;
+    
+        if (head == NULL) {
+            head = helm;
+        } else {
+            Helm* current = head;
+            while (current->next != NULL) {
+                current = current->next;
+            }
+            current->next = helm;
+        }
+    
+        cout << "\nHelm telah ditambahkan di akhir!" << endl;
+        cout << "Tekan ENTER untuk kembali ke menu awal... ";
+        getch();
+        system("cls");
+    }
+    
+    void hapusHelmDiAkhir() {
+        if (head == NULL) {
+            cout << "Tidak ada helm dalam daftar." << endl;
+            cout << "Tekan ENTER untuk kembali ke menu awal... ";
+            getch();
+            system("cls");
+            return;
+        }
+    
+        if (head->next == NULL) {
+            delete head;
+            head = NULL;
+            cout << "Helm di akhir telah dihapus!" << endl;
+            cout << "Tekan ENTER untuk kembali ke menu awal... ";
+            getch();
+            system("cls");
+            return;
+        }
+    
+        Helm* current = head;
+        while (current->next->next != NULL) {
+            current = current->next;
+        }
+    
+        delete current->next;
+        current->next = NULL;
+        cout << "Helm di akhir telah dihapus!" << endl;
+        cout << "Tekan ENTER untuk kembali ke menu awal... ";
+        getch();
+        system("cls");
+    }
+    
+    void tambahHelmDiTengah() {
+        if (head == NULL) {
+            tambahHelmDiAwal();
+            return;
+        }
+    
+        Helm* helm = new Helm;
+        cout << "Masukkan Nama/Merk Helm: ";
+        cin.ignore();
+        getline(cin, helm->nama);
+    
+        cout << "Masukkan Seri Helm: ";
+        getline(cin, helm->seri);
+    
+        cout << "Masukkan Harga Helm: Rp. ";
+        cin >> helm->harga;
+    
+        cout << "Masukkan Stok Helm: ";
+        cin >> helm->stok;
+    
+        cout << "Masukkan Ukuran Helm: ";
+        cin.ignore();
+        getline(cin, helm->ukuran);
+    
+        int posisi;
+        cout << "Masukkan posisi (mulai dari 1) di mana helm akan ditambahkan: ";
+        cin >> posisi;
+    
+        if (posisi <= 1) {
+            helm->next = head;
+            head = helm;
+        } else {
+            Helm* current = head;
+            int nomorPosisi = 1;
+    
+            while (current != NULL && nomorPosisi < posisi - 1) {
+                current = current->next;
+                nomorPosisi++;
+            }
+    
+            if (current != NULL) {
+                helm->next = current->next;
+                current->next = helm;
+            } else {
+                cout << "Posisi yang dimasukkan melebihi jumlah helm yang ada. Helm tidak ditambahkan." << endl;
+                delete helm;
+            }
+        }
+    
+        cout << "\nHelm telah ditambahkan di tengah!" << endl;
+        cout << "Tekan ENTER untuk kembali ke menu awal... ";
+        getch();
+        system("cls");
+    }
+    
+    void hapusHelmDiTengah() {
+        if (head == NULL) {
+            cout << "Tidak ada helm dalam daftar." << endl;
+            cout << "Tekan ENTER untuk kembali ke menu awal... ";
+            getch();
+            system("cls");
+            return;
+        }
+    
+        int posisi;
+        cout << "Masukkan posisi (mulai dari 1) di mana helm akan dihapus: ";
+        cin >> posisi;
+    
+        if (posisi <= 1) {
+            hapusHelmDiAwal();
+        } else {
+            Helm* current = head;
+            int nomorPosisi = 1;
+    
+            while (current != NULL && nomorPosisi < posisi - 1) {
+                current = current->next;
+                nomorPosisi++;
+            }
+    
+            if (current != NULL && current->next != NULL) {
+                Helm* helmHapus = current->next;
+                current->next = helmHapus->next;
+                delete helmHapus;
+                cout << "Helm di tengah telah dihapus!" << endl;
+            } else {
+                cout << "Posisi yang dimasukkan melebihi jumlah helm yang ada. Helm tidak dihapus." << endl;
+            }
+        }
+    
+        cout << "Tekan ENTER untuk kembali ke menu awal... ";
+        getch();
+        system("cls");
+    }
+    
+    void ubahHelm() {
+        if (head == NULL) {
+            cout << "Tidak ada helm dalam daftar." << endl;
+            cout << "Tekan ENTER untuk kembali ke menu awal... ";
+            getch();
+            system("cls");
+            return;
+        }
+        
+        string namaBaru;
+        string seriBaru;
+    
+        cout << "Masukkan Nama/Merk Helm yang akan diubah: ";
+        cin.ignore();
+        getline(cin, namaBaru);
+    
+        cout << "Masukkan Seri Helm yang akan diubah: ";
+        getline(cin, seriBaru);
+    
+        Helm* current = head;
+    
+        while (current != NULL) {
+            if (current->nama == namaBaru && current->seri == seriBaru) {
+                cout << "===================================" << endl;
+                cout << "Data helm saat ini:" << endl;
+                cout << "===================================" << endl;
+                cout << "Nama/Merk: " << current->nama << endl;
+                cout << "Seri: " << current->seri << endl;
+                cout << "Harga: Rp. " << current->harga << endl;
+                cout << "Stok: " << current->stok << " pcs" << endl;
+                cout << "Ukuran: " << current->ukuran << endl;
+                cout << "===================================" << endl;
+                cout << "===================================" << endl;
+                cout << "Masukkan data helm yang baru:" << endl;
+                cout << "===================================" << endl;
+    
+                cout << "Nama/Merk Helm Baru: ";
+                getline(cin, current->nama);
+    
+                cout << "Seri Helm Baru: ";
+                getline(cin, current->seri);
+    
+                cout << "Harga Helm Baru: Rp. ";
+                cin >> current->harga;
+    
+                cout << "Stok Helm Baru: ";
+                cin >> current->stok;
+    
+                cout << "\nData helm telah diubah!" << endl;
+                cout << "Tekan ENTER untuk kembali ke menu awal... ";
+                getch();
+                system("cls");
+                return;
+            }
+            current = current->next;
+        }
+    
+        cout << "Helm dengan nama/merk dan seri yang dimasukkan tidak ditemukan." << endl;
+        cout << "Tekan ENTER untuk kembali ke menu awal... ";
+        getch();
+        system("cls");
+    }
+    
+    int main() {
+        int pilihan;
+    
+        do {
+            cout << "\n=== Program Toko Helm ===" << endl;
+            cout << "1. Tambah Helm di Awal" << endl;
+            cout << "2. Tambah Helm di Akhir" << endl;
+            cout << "3. Tambah Helm di Tengah" << endl;
+            cout << "4. Hapus Helm di Awal" << endl;
+            cout << "5. Hapus Helm di Akhir" << endl;
+            cout << "6. Hapus Helm di Tengah" << endl;
+            cout << "7. Tampilkan Helm" << endl;
+            cout << "8. Ubah Helm" << endl;
+            cout << "9. Sorting Helm" << endl;
+            cout << "10. Keluar" << endl;
+            cout << "Pilihan: ";
+            cin >> pilihan;
+    
+            switch (pilihan) {
+                case 1:
+                    system("cls");
+                    tambahHelmDiAwal();
+                    break;
+                case 2:
+                    system("cls");
+                    tambahHelmDiAkhir();
+                    break;
+                case 3:
+                    system("cls");
+                    tambahHelmDiTengah();
+                    break;
+                case 4:
+                    system("cls");
+                    hapusHelmDiAwal();
+                    break;
+                case 5:
+                    system("cls");
+                    hapusHelmDiAkhir();
+                    break;
+                case 6:
+                    system("cls");
+                    hapusHelmDiTengah();
+                    break;
+                case 7:
+                    system("cls");
+                    tampilkanHelm();
+                    break;
+                case 8:
+                    system("cls");
+                    ubahHelm();
+                    break;
+                case 9:
+                    system("cls");
+                    urutkanData();
+                    break;
+                case 10:
+                    cout << "Terima kasih telah menggunakan program toko helm!" << endl;
+                    break;
+                default:
+                    cout << "Pilihan tidak valid. Silakan coba lagi." << endl;
+                    cout << "Tekan ENTER untuk kembali ke menu awal... ";
+                    getch();
+                    system("cls");
+                    break;
+            }
+        } while (pilihan != 10);
+    
+        Helm* current = head;
+        while (current != NULL) {
+            Helm* next = current->next;
+            delete current;
+            current = next;
+        }
+        
+        return 0;
+    }
